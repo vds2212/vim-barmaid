@@ -1,0 +1,55 @@
+*barmaid.txt* Automatic managment of the side bars
+
+Author:  Vivian De Smedt
+License: Same terms as Vim itself (see |license|)
+
+
+==============================================================================
+Barmaid                                                              |barmaid|
+Introduction .......................................... |barmaid-introduction|
+Usage ........................................................ |barmaid-usage|
+Configuration ........................................ |barmaid-configuration|
+About ........................................................ |barmaid-about|
+
+
+==============================================================================
+INTRODUCTION                                    *barmaid* *barmaid-introduction*
+
+
+==============================================================================
+USAGE                                                          *barmaid-usage*
+
+The plugin introduces the following commands:
+- |:LeaveSideBar|
+
+COMMANDS                                                    *barmaid-commands*
+
+                                                               *:LeaveSideBar*
+:LeaveSideBar        Leave the side bar.
+
+==============================================================================
+CONFIGURATION                                          *barmaid-configuration*
+
+------------------------------------------------------------------------------
+Determine the default width of the console window                *g:term_with*
+
+The default value is 100
+
+------------------------------------------------------------------------------
+Define the command executed when the console is first created *g:term_command*
+
+The default value is the empty string
+
+------------------------------------------------------------------------------
+If 0 the default mappings are not created         *g:term_set_default_mapping*
+
+The default value is 1
+
+==============================================================================
+ABOUT                                                          *barmaid-about*
+
+Grab the latest version or report a bug on GitHub:
+
+http://github.com/vds2212/vim-barmaid
+
+ vim:tw=78:et:ft=help:norl:
