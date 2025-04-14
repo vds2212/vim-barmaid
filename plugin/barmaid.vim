@@ -8,7 +8,11 @@ function! s:IsSideBar(buf_nr)
   let buf_type = getbufvar(a:buf_nr, '&buftype')
 
   if buf_type ==# 'terminal'
-    return 1
+    let l:barmaid_terminal_is_bar = 1
+    if exists("g:barmaid_terminal_is_bar")
+      let l:barmaid_terminal_is_bar = g:barmaid_terminal_is_bar
+    endif
+    return l:barmaid_terminal_is_bar
   endif
 
   " This code prevent the fugitive buffer to open properly

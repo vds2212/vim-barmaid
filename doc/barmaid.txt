@@ -25,23 +25,17 @@ The plugin introduces the following commands:
 COMMANDS                                                    *barmaid-commands*
 
                                                                *:LeaveSideBar*
-:LeaveSideBar        Leave the side bar.
+:LeaveSideBar        Leave the side bar. Used in plugin configuration that
+                     trigger the loading of buffer in window (e.g. Vim-Clap)
+                     to avoid that the buffer is loaded in a sidebar window
 
 ==============================================================================
 CONFIGURATION                                          *barmaid-configuration*
 
 ------------------------------------------------------------------------------
-Determine the default width of the console window                *g:term_with*
+                                               *g:barmaid_terminal_is_sidebar*
 
-The default value is 100
-
-------------------------------------------------------------------------------
-Define the command executed when the console is first created *g:term_command*
-
-The default value is the empty string
-
-------------------------------------------------------------------------------
-If 0 the default mappings are not created         *g:term_set_default_mapping*
+Determine if the terminal windows should be considered as sidebar.
 
 The default value is 1
 
