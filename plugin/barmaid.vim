@@ -1,3 +1,8 @@
+
+function! LogMsg(message)
+  call writefile([a:message], $MYVIMDIR . "messages.log", "a")
+endfunction
+
 function! s:IsSideBar(buf_nr)
   " Return 1 if the buffer correspond to a side bar:
   " - A terminal window
@@ -41,6 +46,7 @@ function! s:IsSideBar(buf_nr)
   endif
 
   let listed = getbufvar(a:buf_nr, '&buflisted')
+  " call LogMsg("BufNr: " . a:buf_nr . " Listed: " . listed)
   if !listed
     " the not listed buffers
     " e.g.:
@@ -71,7 +77,6 @@ command! -bar LeaveSideBar call <SID>LeaveSideBar()
 
 function! s:GetNumNonSideBarWindows()
   let num_windows = 0
-  " echom "winnr('$'):" . winnr('$')
 
   for win_nr in range(1, winnr('$'))
     let buf_nr = winbufnr(win_nr)
@@ -88,8 +93,6 @@ function! s:IsAutoClose(buf_nr)
   " Return 1 if the side bar should already auto close
   let buf_type = getbufvar(a:buf_nr, '&filetype')
 
-  " let term_buffers = term_list()
-
   if buf_type ==# 'tagbar'
     " Not Read Only
     return 1
@@ -98,9 +101,22 @@ function! s:IsAutoClose(buf_nr)
   endif
 endfunction
 
+let g:barmaid_pause = 0
+
+function! s:PauseBarmaid(pause)
+  let g:barmaid_pause = a:pause
+endfunction
+
 function! s:KillSideBars()
+  if g:barmaid_pause
+    call LogMsg("barmaid_pause")
+    return
+  endif
+  call LogMsg("Enter Windows:" . tabpagenr() . '/' . tabpagenr('$') . '-' . winnr() . '/' . winnr('$'))
+  " echom "Enter Windows:" . tabpagenr() . '/' . winnr()
+  " return
   let num_windows = s:GetNumNonSideBarWindows()
-  " echom "Num windows: " . num_windows
+  " echom "Num Windows:" . num_windows
   if num_windows > 0
     " If there are non side bar windows do nothing
     return
@@ -110,14 +126,12 @@ function! s:KillSideBars()
   let wininfos = getwininfo()
   call filter(wininfos, "v:val.tabnr == " . tabpagenr())
   if has('nvim')
-    let term_buffers = map(filter(win_infos, 'v:val.terminal'), 'v:val.winnr')
+    let term_buffers = map(filter(wininfos, 'v:val.terminal'), 'v:val.winnr')
   else
     let term_buffers = term_list()
   endif
   for buf_nr in term_buffers
-    " echom "what about terminal: " . buf_nr
     if len(win_findbuf(buf_nr)) == 0
-      " echom "delete terminal: " . buf_nr
       execute 'bd! ' . buf_nr
     endif
   endfor
@@ -130,17 +144,25 @@ function! s:KillSideBars()
     let term_buffers = term_list()
   endif
   let buf_nr = bufnr('%')
-  " echom "buffer: " . buf_nr
   if index(term_buffers, buf_nr) >= 0
     " Kill the terminal buffer and quit
-    " echom "terminal buffer"
-    call feedkeys("\<C-w>:bd!\<CR>:quit\<CR>:\<BS>")
+    " call feedkeys("\<C-w>:bd!\<CR>:quit\<CR>:\<BS>")
+    call feedkeys("\<C-w>:bd!\<CR>:quit\<CR>")
   elseif !s:IsAutoClose(buf_nr)
     " Kill the side bar window
-    " echom "side bar"
-    call feedkeys(":quit\<CR>:\<BS>")
+    " call feedkeys(":quit\<CR>:\<BS>")
+    let l:command = ":quit\<CR>"
+    if winnr('$') == 1 && tabpagenr('$') > 1
+      " let g:barmaid_pause = 1
+      let l:command = ":tabclose\<CR>"
+    endif
+    call LogMsg(command)
+    call feedkeys(l:command)
   endif
 endfunction
 
 " Close Vim if the last buffer is side bar:
-autocmd BufEnter * call <SID>KillSideBars()
+" autocmd BufEnter * call <SID>KillSideBars()
+autocmd TabLeave * call <SID>PauseBarmaid(1)
+autocmd TabEnter * call <SID>PauseBarmaid(0)
+autocmd WinEnter * call <SID>KillSideBars()
