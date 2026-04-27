@@ -126,7 +126,7 @@ function! s:KillSideBars()
   let wininfos = getwininfo()
   call filter(wininfos, "v:val.tabnr == " . tabpagenr())
   if has('nvim')
-    let term_buffers = map(filter(wininfos, 'v:val.terminal'), 'v:val.winnr')
+    let term_buffers = map(filter(wininfos, 'v:val.terminal'), 'v:val.bufnr')
   else
     let term_buffers = term_list()
   endif
@@ -139,15 +139,17 @@ function! s:KillSideBars()
   let wininfos = getwininfo()
   call filter(wininfos, "v:val.tabnr == " . tabpagenr())
   if has('nvim')
-    let term_buffers = map(filter(wininfos, 'v:val.terminal'), 'v:val.winnr')
+    let term_buffers = map(filter(wininfos, 'v:val.terminal'), 'v:val.bufnr')
   else
     let term_buffers = term_list()
   endif
+
   let buf_nr = bufnr('%')
   if index(term_buffers, buf_nr) >= 0
     " Kill the terminal buffer and quit
     " call feedkeys("\<C-w>:bd!\<CR>:quit\<CR>:\<BS>")
     call feedkeys("\<C-w>:bd!\<CR>:quit\<CR>")
+
   elseif !s:IsAutoClose(buf_nr)
     " Kill the side bar window
     " call feedkeys(":quit\<CR>:\<BS>")
