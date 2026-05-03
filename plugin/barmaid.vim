@@ -20,10 +20,15 @@ function! s:IsSideBar(buf_nr)
     return l:barmaid_terminal_is_bar
   endif
 
-  " This code prevent the fugitive buffer to open properly
-  " if &filetype == "fugitive"
-  "   return 1
-  " endif
+   let file_type = getbufvar(a:buf_nr, '&filetype')
+
+   if file_type == "fugitive"
+     return 1
+   endif
+
+   if file_type == "ctrlsf"
+     return 1
+   endif
 
   " This code prevent the fugitive buffer to open properly
   " if !&modifiable
