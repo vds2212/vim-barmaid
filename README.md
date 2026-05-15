@@ -3,7 +3,19 @@ A Vim/Neovim plugin that manage automatically side bars.
 
 ## Introduction
 
-The Barmaid plugin automatically close the tab when the last non bar window is closed.
+Some Vim/Neovim plugin introduce side bars.
+e.g.:
+- Neo-Tree introduces a right panel to display the folder hierarchy
+- Vim-Fugitive introduces a bottom window with the files to stage or commit
+- TagBar introduce a right panel to display the structure of the code
+- ...
+
+Some Vim/Neovim window are not intented to contains user files.
+e.g.:
+- QuickFix window
+- LocationList window
+
+The Barmaid plugin automatically `quit` these window when the last 'real' user window of the tab is closed.
 
 ## Commands
 
